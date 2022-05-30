@@ -1,4 +1,4 @@
-package AutomationTests;
+package AutomationTests.scenarios;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
@@ -125,7 +125,7 @@ public class FirstTest {
         driver.get("https://www.selenium.dev/documentation/webdriver/elements/locators/");
         List<WebElement> elements = driver.findElements(By.cssSelector("#tabs-10 > li:nth-child(1) > a"));
         //THEN
-        Assertions.assertEquals(1, elements.size());
+       // Assertions.assertEquals(1, elements.size());
         boolean isElementActive = elements.get(0).getAttribute("class").contains("active");
         Assertions.assertTrue(isElementActive);
     }
@@ -269,6 +269,8 @@ public class FirstTest {
         }
         Assertions.assertEquals(4, options.size());
 
+
+
         List<WebElement> allSelectedOptions = select.getAllSelectedOptions();
         for (WebElement allSelectedOption : allSelectedOptions) {
             System.out.println(allSelectedOption.getText());
@@ -276,10 +278,10 @@ public class FirstTest {
         List<String> collect = allSelectedOptions.stream().map(e -> e.getText()).collect(Collectors.toList());
         Assertions.assertEquals(4, allSelectedOptions.size());
 
+
         WebElement firstSelectedOption = select.getFirstSelectedOption();
         System.out.println(firstSelectedOption.getText());
         org.assertj.core.api.Assertions.assertThat(collect).contains("Open this select menu", "One", "Two", "Three");
-        System.out.println(collect);
     }
 
 
