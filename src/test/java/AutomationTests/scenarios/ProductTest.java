@@ -1,39 +1,42 @@
 package AutomationTests.scenarios;
 
+import AutomationTests.ScreenshotOnFailure.BaseSetUp;
+import AutomationTests.ScreenshotOnFailure.TestWatcher;
 import AutomationTests.pages.LoginPage;
 import AutomationTests.pages.ProductsPage;
 import AutomationTests.pages.StepsAssertions;
-import org.junit.jupiter.api.AfterEach;
+import io.qameta.allure.Step;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.PageFactory;
 
+import static AutomationTests.ScreenshotOnFailure.BaseSetUp.driver;
+
+
+@ExtendWith(TestWatcher.class)
 public class ProductTest {
-    private static WebDriver driver;
     private static ProductsPage productsPage;
     private static StepsAssertions stepsAssertions;
-    private static LoginPage loginPage;
-
-    private ProductTest() {
-        System.setProperty("webdriver.chrome.driver", "C:/DRIVERS/chromedriver.exe");
-
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized");
-        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
-        options.setHeadless(false);
-
-        driver = new ChromeDriver(options);
-        productsPage = new ProductsPage(driver);
-        stepsAssertions = new StepsAssertions(driver);
-        loginPage = new LoginPage(driver);
 
 
-    }
+        @BeforeAll
+        static void init() {
+            BaseSetUp baseSetUp = new BaseSetUp();
+            productsPage = PageFactory.initElements(driver,ProductsPage.class);
+
+            stepsAssertions = new StepsAssertions(driver);
+        }
+
 
     @Test
-    public void byAddProductTest() throws InterruptedException {
+    @Step()
+    public void byAddProductTest()  {
         //GIVEN
        stepsAssertions.StepsAssertionRegisteredUser();
         //GIVEN
@@ -76,10 +79,11 @@ public class ProductTest {
 
 
     }
-    @AfterEach
-    public void cleanUp() {
-        driver.close();
+    @AfterAll
+    @Step("Quit browser")
+    static void tearDown(){
         driver.quit();
     }
-}
+    }
+
 

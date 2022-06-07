@@ -1,40 +1,58 @@
 package AutomationTests.scenarios;
 
+import AutomationTests.ClientManual.ClientManual;
+import AutomationTests.ScreenshotOnFailure.BaseSetUp;
+import AutomationTests.ScreenshotOnFailure.ScreenshotOnFailure;
 import AutomationTests.pages.LoginPage;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.locators.RelativeLocator;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import io.qameta.allure.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.openqa.selenium.support.PageFactory;
 
-import java.time.Duration;
-
+@Feature("Login functionality")
 public class LoginTest {
-    private static WebDriver driver;
+
     static LoginPage loginPage;
 
-    public LoginTest(){
-        System.setProperty("webdriver.chrome.driver", "C:/DRIVERS/chromedriver.exe");
-
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized");
-        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
-        options.setHeadless(false);
-
-        driver = new ChromeDriver(options);
-        loginPage = new LoginPage(driver);
+    @BeforeAll
+    static void init(){
+        BaseSetUp baseSetUp = new BaseSetUp();
+        loginPage = PageFactory.initElements(BaseSetUp.driver,LoginPage.class);
 
     }
+
     @Test
+    @Story("Login successful")
+    @Issue("issue- 1234")
+    @Description("Check login is successful after entering valid credentials  ")
     public void LabelEmailHelp(){
         //GIVEN
+        Long existingClientId = 123L;
+        ClientManual clientManual = new ClientManual.ClientBuilder(existingClientId)
+                .withName("test")
+                .withLastName("tetsLastName")
+                .withAddress("testadress")
+                .build();
         //WHEN
         loginPage.openLoginPage();
         loginPage.FindLabelEmailHelp();
+    }
+    @RegisterExtension
+    ScreenshotOnFailure watch = new ScreenshotOnFailure(BaseSetUp.driver, "target/surefire-reports");
+    @Test
+    @Story("Login successful")
+    @Description("Check login is successful after entering valid credentials  ")
+    public void checkValidationMassageWithScreenshot(){
+        //GIVEN
+        String notValidationEmail = "testTest";
+        //WHEN
+        loginPage.openLoginPage();
+        loginPage.notCorrectEmailAddress(notValidationEmail);
+        loginPage.submit();
+        //THEN
+        loginPage.checkValidationMassage();
+
+
     }
 
     @Test
@@ -52,9 +70,10 @@ public class LoginTest {
         loginPage.openLoginPage();
         loginPage.FindLabelPassword();
     }
-
+    @RegisterExtension
+    ScreenshotOnFailure watcher = new ScreenshotOnFailure(BaseSetUp.driver, "target/surefire-reports");
     @Test
-    public void byRelativeLocatorTest() throws InterruptedException {
+    public void byRelativeLocatorTest()  {
         //GIVEN
         String existingUserEmail = "test@test.com";
         String existingUserPassword = "Test";
@@ -71,14 +90,14 @@ public class LoginTest {
     }
 
     private void checkUserIsRedirectedToProducts() {
-        String currentUrl = driver.getCurrentUrl();
+        String currentUrl = BaseSetUp.driver.getCurrentUrl();
         Assertions.assertEquals("http://online-sh.herokuapp.com/products",currentUrl);
     }
 
-    @AfterEach
-    public void cleanUp() {
-        driver.close();
-        driver.quit();
+    @AfterAll
+    @Step("Quit browser")
+    static void tearDown(){
+        BaseSetUp.driver.quit();
     }
 
 }

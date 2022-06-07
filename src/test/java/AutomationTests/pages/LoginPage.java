@@ -1,20 +1,27 @@
 package AutomationTests.pages;
 
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
 
+import java.util.Collections;
 import java.util.List;
 
 public class LoginPage {
 
     private WebDriver driver;
-
-    By emailInput = By.id("exampleInputEmail1");
-    By passwordInput = By.id("exampleInputPassword1");
-    By submitButton = By.xpath("//button[@class='btn btn-primary']");
-    By labelEmailAddress = By.xpath("//label[text()='Email address']");
+    @FindBy(id ="exampleInputEmail1")
+    private WebElement emailInput;
+    @FindBy(id = "exampleInputPassword1")
+    private WebElement passwordInput;
+    @FindBy(xpath = "//button[@class='btn btn-primary']")
+    private WebElement submitButton;
+    @FindBy(how = How.XPATH, using = "//label[text()='Email address']")
+    private WebElement labelEmailAddress;
     By labelPassword = By.xpath("//label[text()='Password']");
     By emailHelp = By.xpath("//div[@id='emailHelp']");
 
@@ -25,7 +32,7 @@ public class LoginPage {
         Assertions.assertTrue(elementTru);
     }
         public void FindLabelEmailAddress () {
-            List<WebElement> elements = driver.findElements(labelEmailAddress);
+            List<WebElement> elements = Collections.singletonList(labelEmailAddress);
             boolean elementTru = elements.get(0).getText().contains("Email address");
             Assertions.assertTrue(elementTru);
             //WebElement elementLabel = driver.findElement(labelEmailAddress);
@@ -41,25 +48,39 @@ public class LoginPage {
             // org.assertj.core.api.Assertions.assertThat(elementLabel).isNotNull();
         }
 
+        public void notCorrectEmailAddress(String emailText){
+        emailInput.sendKeys(emailText);
+        }
+
+        public void checkValidationMassage(){
+            String validationMessage = emailInput.getAttribute("validationMessage");
+            org.assertj.core.api.Assertions.assertThat(validationMessage).contains("Адрес электронной почты должен содержать символ \"@\".");
+            System.out.println(validationMessage);
+
+
+        }
+
 
 
     public LoginPage(WebDriver driver) {
             this.driver = driver;
         }
-        public LoginPage setEmail (String emailText){
-            driver.findElement(emailInput).sendKeys(emailText);
+    @Step("Set email as {emailText}")
+    public LoginPage setEmail (String emailText){
+            emailInput.sendKeys(emailText);
             return this;
         }
-
+        @Step("Set password as {passwordText}")
         public LoginPage setPassword (String passwordText){
-            driver.findElement(passwordInput).sendKeys(passwordText);
+            passwordInput.sendKeys(passwordText);
             return this;
         }
+        @Step("Click submit button")
         public LoginPage submit () {
-            driver.findElement(submitButton).click();
+            submitButton.click();
             return this;
         }
-
+        @Step("Open login page ")
         public LoginPage openLoginPage () {
             driver.get("http://online-sh.herokuapp.com/login");
             return this;
