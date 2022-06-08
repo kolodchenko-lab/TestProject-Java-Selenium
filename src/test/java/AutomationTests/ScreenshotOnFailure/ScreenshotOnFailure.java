@@ -1,5 +1,8 @@
 package AutomationTests.ScreenshotOnFailure;
 
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.openqa.selenium.OutputType;
@@ -22,11 +25,9 @@ public class ScreenshotOnFailure  implements TestWatcher {
     }
 
     @Override
-    public void testSuccessful(ExtensionContext context) { try {
-        captureScreenshot(driver, context.getDisplayName());
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
+    public void testSuccessful(ExtensionContext context) {
+        Allure.getLifecycle().addAttachment("screenshot","image/png","png",
+                ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES));
     }
 
     @Override
@@ -58,5 +59,10 @@ public class ScreenshotOnFailure  implements TestWatcher {
     public ScreenshotOnFailure(WebDriver driver, String path){
         this.driver = driver;
         this.path = path;
+    }
+    @AfterAll
+    @Step("Quit browser")
+    static void tearDown(){
+        BaseSetUp.driver.quit();
     }
 }

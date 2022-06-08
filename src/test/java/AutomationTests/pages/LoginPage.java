@@ -26,18 +26,23 @@ public class LoginPage {
     By emailHelp = By.xpath("//div[@id='emailHelp']");
 
 
+    @Step("Check label 'We'll never share your email with anyone else.'")
+
     public void FindLabelEmailHelp() {
         List<WebElement> elements = driver.findElements(emailHelp);
         boolean elementTru = elements.get(0).getText().contains("We'll never");
         Assertions.assertTrue(elementTru);
     }
-        public void FindLabelEmailAddress () {
+    @Step("Check label 'Email address'")
+
+    public void FindLabelEmailAddress () {
             List<WebElement> elements = Collections.singletonList(labelEmailAddress);
             boolean elementTru = elements.get(0).getText().contains("Email address");
             Assertions.assertTrue(elementTru);
             //WebElement elementLabel = driver.findElement(labelEmailAddress);
             //org.assertj.core.api.Assertions.assertThat(elementLabel).isNotNull();
         }
+    @Step("Check label 'Password'")
 
         public void FindLabelPassword () {
             driver.findElement(labelPassword);
@@ -47,11 +52,13 @@ public class LoginPage {
             // WebElement elementLabel = driver.findElement(labelPassword);
             // org.assertj.core.api.Assertions.assertThat(elementLabel).isNotNull();
         }
-
+    @Step("Set not correct email address as {emailText}")
         public void notCorrectEmailAddress(String emailText){
         emailInput.sendKeys(emailText);
         }
 
+
+        @Step("Check validation massage 'Адрес электронной почты должен содержать символ \"@\".'")
         public void checkValidationMassage(){
             String validationMessage = emailInput.getAttribute("validationMessage");
             org.assertj.core.api.Assertions.assertThat(validationMessage).contains("Адрес электронной почты должен содержать символ \"@\".");

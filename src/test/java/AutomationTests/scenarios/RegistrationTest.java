@@ -2,17 +2,21 @@ package AutomationTests.scenarios;
 
 import AutomationTests.pages.RegistrationPage;
 import AutomationTests.pages.StepsAssertions;
-import org.junit.jupiter.api.AfterEach;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
+import io.qameta.allure.Story;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+@Feature("Registration page functionality")
 public class RegistrationTest{
         private static WebDriver driver;
         private static RegistrationPage registrationPage;
-        private static StepsAssertions stepsAssertions;
+
 
 
         public RegistrationTest() {
@@ -24,45 +28,46 @@ public class RegistrationTest{
                 options.setHeadless(false);
                 driver =new ChromeDriver(options);
                 registrationPage = new RegistrationPage(driver);
-                stepsAssertions = new StepsAssertions(driver);
-                driver = new ChromeDriver(options);
+
 
         }
-
+        @Story("Check registration new user")
         @Test
         public void RegistrationPageTest(){
         //GIVEN
+                String testName = "orangeTest";
+                String testLastName = "orangeTest";
+                String testEmailAddress = "orange@test.com";
+                String testPassword = "Test";
         //WHEN
-        registrationPage.openRegistrationPage();
-        registrationPage.setRegistrationName("orangeTest");
-        registrationPage.setRegistrationLastName("orangeTest");
-        registrationPage.setRegistrationEmailAddress("orange@test.com");
-        registrationPage.setRegistrationPassword("test");
-        registrationPage.submitRegistrationButton();
         //THEN
-        stepsAssertions.checkingTheTransitionToTheLoginPage();
+        registrationPage.openRegistrationPage();
+        registrationPage.setRegistrationName(testName);
+        registrationPage.setRegistrationLastName(testLastName);
+        registrationPage.setRegistrationEmailAddress(testEmailAddress);
+        registrationPage.setRegistrationPassword(testPassword);
+        registrationPage.checkRegistrationButton();
+
         }
+
         @Test
+        @Story("Check labels in registration page")
         public void Labels(){
                 //GIVEN
+                registrationPage.openRegistrationPage();
                 //WHEN
                 //THEN
-                //Не уверен что так можно делать, на мой взгляд не особо надёжно, что бы все проверки разом делать.
-                registrationPage.openRegistrationPage();
                 registrationPage.findRegistrationName();
                 registrationPage.findRegistrationLastName();
                 registrationPage.findRegistrationEmailAddress();
                 registrationPage.findRegistrationPassword();
-        }
-        @Test
-        public void ValidationMassage(){
-                registrationPage.openRegistrationPage();
-                registrationPage.findValidationMassageEmailAddress();
+                registrationPage.findRegistrationHelpLabel();
         }
 
-        @AfterEach
-        public void cleanUp() {
-                driver.close();
+
+        @AfterAll
+        @Step("Quit browser")
+        static void tearDown(){
                 driver.quit();
         }
 

@@ -1,5 +1,7 @@
 package AutomationTests.pages;
 
+import AutomationTests.ScreenshotOnFailure.BaseSetUp;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -16,6 +18,7 @@ public class StepsAssertions {
         this.driver = driver;
     }
 
+    @Step("Registered user with valid values")
     public void StepsAssertionRegisteredUser() {
             driver.get("http://online-sh.herokuapp.com/login");
             driver.findElement(By.id("exampleInputEmail1")).sendKeys("test@test.com");
@@ -23,13 +26,18 @@ public class StepsAssertions {
             driver.findElement(By.xpath("//button[@class='btn btn-primary']")).click();
 
     }
+    @Step("Check user Is redirected to products page")
+    public void checkUserIsRedirectedToProducts() {
+        String currentUrl = BaseSetUp.driver.getCurrentUrl();
+        Assertions.assertEquals("http://online-sh.herokuapp.com/products",currentUrl);
+    }
 
 
-    public void checkingTheTransitionToTheLoginPage() {
+    public void checkTheTransitionToTheLoginPage() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(500L));
         wait.until(ExpectedConditions.urlToBe("http://online-sh.herokuapp.com/login"));
     }
-    public void checkingTheTransitionToTheAllProductsPage() {
+    public void checkTheTransitionToTheAllProductsPage() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(500L));
         wait.until(ExpectedConditions.urlToBe("http://online-sh.herokuapp.com/products"));
     }

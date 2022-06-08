@@ -1,25 +1,21 @@
 package AutomationTests.scenarios;
 
 import AutomationTests.ScreenshotOnFailure.BaseSetUp;
-import AutomationTests.ScreenshotOnFailure.TestWatcher;
-import AutomationTests.pages.LoginPage;
+import AutomationTests.ScreenshotOnFailure.ScreenshotOnFailure;
 import AutomationTests.pages.ProductsPage;
 import AutomationTests.pages.StepsAssertions;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.openqa.selenium.PageLoadStrategy;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openqa.selenium.support.PageFactory;
 
 import static AutomationTests.ScreenshotOnFailure.BaseSetUp.driver;
 
-
-@ExtendWith(TestWatcher.class)
+@Feature("Product page functionality")
 public class ProductTest {
     private static ProductsPage productsPage;
     private static StepsAssertions stepsAssertions;
@@ -29,53 +25,62 @@ public class ProductTest {
         static void init() {
             BaseSetUp baseSetUp = new BaseSetUp();
             productsPage = PageFactory.initElements(driver,ProductsPage.class);
-
-            stepsAssertions = new StepsAssertions(driver);
+            stepsAssertions = PageFactory.initElements(driver,StepsAssertions.class);
         }
 
-
+    @RegisterExtension
+    ScreenshotOnFailure watch = new ScreenshotOnFailure(BaseSetUp.driver, "target/surefire-reports");
     @Test
-    @Step()
-    public void byAddProductTest()  {
-        //GIVEN
-       stepsAssertions.StepsAssertionRegisteredUser();
+    @Story("Add product successful")
+       public void byAddProductTest()  {
         //GIVEN
         String existingProductName = "orange";
         String existingProductPrice = "2002";
         //WHEN
-        productsPage.openProductPage();
-        productsPage.setAddButtonProduct();
+        //THEN
+        stepsAssertions.StepsAssertionRegisteredUser();
+        productsPage.checkAddButtonProduct();
         productsPage.setAddProductName(existingProductName);
         productsPage.setAddProductPrice(existingProductPrice);
-        productsPage.setSubmitButtonProduct();
-        productsPage.setLogOutButtonProduct();
-        //THEN
-        stepsAssertions.checkingTheTransitionToTheLoginPage();
+        productsPage.checkSubmitButtonProduct();
+
 
     }
     @Test
+    @Story("Check delete test product")
     public void DeleteTestProduct(){
         //GIVEN
         stepsAssertions.StepsAssertionRegisteredUser();
         //WHEN
-        productsPage.checkDeleteButtonProduct();
         //THEN
-        stepsAssertions.checkingDeleteButton();
+        productsPage.checkDeleteButtonProduct();
+    }
+
+    @Test
+    @Story("Check LogOut button")
+    public void CheckLogOutButton() {
+        //GIVEN
+        stepsAssertions.StepsAssertionRegisteredUser();
+        //WHEN
+        //THEN
+        productsPage.checkLogOutButtonProduct();
 
     }
     @Test
+    @Story("Check update product")
+
     public void UpdateButtonTest() throws InterruptedException {
         //GIVEN
         String productNameUpdate = "orangeTest";
         String productPriceUpdate = "202";
        stepsAssertions.StepsAssertionRegisteredUser();
        //WHEN
-        productsPage.setUpdateButtonProduct();
+        productsPage.checkUpdateButtonProduct();
         productsPage.setProductNameUpdate(productNameUpdate);
         productsPage.setProductPriceUpdate(productPriceUpdate);
-        productsPage.setUpdateSubmitButton();
         //THEN
-        stepsAssertions.checkingTheTransitionToTheAllProductsPage();
+        productsPage.checkUpdateSubmitButton();
+        //stepsAssertions.checkTheTransitionToTheAllProductsPage();
 
 
     }

@@ -4,44 +4,47 @@ import AutomationTests.ClientManual.ClientManual;
 import AutomationTests.ScreenshotOnFailure.BaseSetUp;
 import AutomationTests.ScreenshotOnFailure.ScreenshotOnFailure;
 import AutomationTests.pages.LoginPage;
+import AutomationTests.pages.StepsAssertions;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openqa.selenium.support.PageFactory;
 
+
 @Feature("Login functionality")
 public class LoginTest {
 
     static LoginPage loginPage;
+    static StepsAssertions stepsAssertions;
 
     @BeforeAll
     static void init(){
         BaseSetUp baseSetUp = new BaseSetUp();
         loginPage = PageFactory.initElements(BaseSetUp.driver,LoginPage.class);
+        stepsAssertions = PageFactory.initElements(BaseSetUp.driver,StepsAssertions.class);
 
-    }
-
-    @Test
-    @Story("Login successful")
-    @Issue("issue- 1234")
-    @Description("Check login is successful after entering valid credentials  ")
-    public void LabelEmailHelp(){
-        //GIVEN
-        Long existingClientId = 123L;
-        ClientManual clientManual = new ClientManual.ClientBuilder(existingClientId)
-                .withName("test")
-                .withLastName("tetsLastName")
-                .withAddress("testadress")
-                .build();
-        //WHEN
-        loginPage.openLoginPage();
-        loginPage.FindLabelEmailHelp();
     }
     @RegisterExtension
     ScreenshotOnFailure watch = new ScreenshotOnFailure(BaseSetUp.driver, "target/surefire-reports");
     @Test
     @Story("Login successful")
     @Description("Check login is successful after entering valid credentials  ")
+    public void LabelEmailHelp(){
+        //GIVEN
+        Long existingClientId = 123L;
+        ClientManual clientManual = new ClientManual.ClientBuilder(existingClientId)
+                .withName("test")
+                .withLastName("testLastName")
+                .withAddress("testAddress")
+                .build();
+        //WHEN
+        loginPage.openLoginPage();
+        loginPage.FindLabelEmailHelp();
+    }
+
+    @Test
+    @Story("Check validation massage with screenshot")
+    @Description
     public void checkValidationMassageWithScreenshot(){
         //GIVEN
         String notValidationEmail = "testTest";
@@ -56,6 +59,7 @@ public class LoginTest {
     }
 
     @Test
+    @Story("Check label Email address")
     public void LabelEmailAddress(){
         //GIVEN
         //WHEN
@@ -64,15 +68,16 @@ public class LoginTest {
     }
 
     @Test
+    @Story("Check label password")
+
     public void LabelPassword(){
         //GIVEN
         //WHEN
         loginPage.openLoginPage();
         loginPage.FindLabelPassword();
     }
-    @RegisterExtension
-    ScreenshotOnFailure watcher = new ScreenshotOnFailure(BaseSetUp.driver, "target/surefire-reports");
     @Test
+    @Story("Relative locator test")
     public void byRelativeLocatorTest()  {
         //GIVEN
         String existingUserEmail = "test@test.com";
@@ -85,14 +90,10 @@ public class LoginTest {
         loginPage.submit();
 
         //THEN
-        checkUserIsRedirectedToProducts();
+        stepsAssertions.checkUserIsRedirectedToProducts();
 
     }
 
-    private void checkUserIsRedirectedToProducts() {
-        String currentUrl = BaseSetUp.driver.getCurrentUrl();
-        Assertions.assertEquals("http://online-sh.herokuapp.com/products",currentUrl);
-    }
 
     @AfterAll
     @Step("Quit browser")

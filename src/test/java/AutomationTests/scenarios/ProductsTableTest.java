@@ -36,8 +36,6 @@ public class ProductsTableTest {
 
     @Test
     @Story("Check products in table")
-    @Issue("issue- 1234")
-    @Description("Check   ")
     public void checkProductsInTable() {
         //GIVEN
         TableTest product1 = TableTest.builder().id(1L)
