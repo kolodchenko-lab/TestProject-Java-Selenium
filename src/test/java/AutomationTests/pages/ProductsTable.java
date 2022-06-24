@@ -1,9 +1,7 @@
 package AutomationTests.pages;
 
-import AutomationTests.ScreenshotOnFailure.BaseSetUp;
 import io.qameta.allure.Step;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

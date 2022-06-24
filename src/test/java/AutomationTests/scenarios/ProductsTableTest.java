@@ -2,7 +2,7 @@ package AutomationTests.scenarios;
 
 
 import AutomationTests.ScreenshotOnFailure.BaseSetUp;
-import AutomationTests.TableTest.TableTest;
+import TableTest.TableTest;
 import AutomationTests.pages.LoginPage;
 import AutomationTests.pages.ProductsTable;
 import AutomationTests.pages.StepsAssertions;

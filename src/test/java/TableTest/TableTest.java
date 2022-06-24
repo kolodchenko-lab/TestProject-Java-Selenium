@@ -1,4 +1,4 @@
-package AutomationTests.TableTest;
+package TableTest;
 
 import lombok.Builder;
 import lombok.Getter;
